@@ -1,0 +1,11 @@
+# Runtime dependencies (what the Docker image installs). No PyTorch needed.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+pydantic-settings>=2.4
+sqlalchemy[asyncio]>=2.0.30
+aiosqlite>=0.20
+asyncpg>=0.29
+numpy>=1.26
+opencv-python-headless>=4.10
+onnxruntime>=1.18

@@ -1,0 +1,33 @@
+# docker compose up --build
+# Put your exported model at ./models/best.onnx first (see README).
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DDA_BACKEND: onnx
+      DDA_MODEL_PATH: /srv/models/best.onnx
+      DDA_DATABASE_URL: postgresql+asyncpg://drone:drone@db:5432/drone
+    volumes:
+      - ./models:/srv/models:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: drone
+      POSTGRES_PASSWORD: drone
+      POSTGRES_DB: drone
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U drone"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
